@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import './App.css';
 
 const API_BASE = "http://localhost:8000";
@@ -239,7 +240,13 @@ function App() {
             {messages.map((m, i) => (
               <div key={i} className={`message ${m.role} ${m.isFinal ? 'ai-final' : ''} staggered-item`}>
                 <span className="mono-label">{m.role === 'user' ? 'Scientist' : 'Resembler Core'}</span>
-                <div style={{ fontSize: '1.05rem', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{m.content}</div>
+                <div style={{ fontSize: '1.05rem', lineHeight: 1.6 }} className="markdown-content">
+                  {m.role === 'ai' ? (
+                    <ReactMarkdown>{m.content}</ReactMarkdown>
+                  ) : (
+                    <div style={{ whiteSpace: 'pre-wrap' }}>{m.content}</div>
+                  )}
+                </div>
                 {m.confidence && (
                   <div className="mono-label" style={{ marginTop: '1rem', color: m.confidence === 'high' ? 'var(--success)' : 'var(--accent)', fontWeight: 800 }}>
                     Confidence: {m.confidence}

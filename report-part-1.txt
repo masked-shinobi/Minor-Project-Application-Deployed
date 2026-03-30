@@ -1,0 +1,51 @@
+# RESEMBLER PROJECT - PROGRESS REPORT (PART 1)
+
+This report summarizes the major architectural and functional updates implemented to transition Resembler into a professional-grade research assistant.
+
+---
+
+## 1. INFRASTRUCTURE & REPO CLEANUP
+- **Git Optimization**: Added `venv/` to `.gitignore` to prevent tracking local environment files, significantly cleaning up the repository state.
+- **Dependency Management**: Updated `requirements.txt` to include essential API packages (`fastapi`, `uvicorn`, `python-multipart`).
+- **Operational Documentation**: Created `running_helper.txt` providing clear, step-by-step instructions for setting up the Python backend and React frontend.
+
+---
+
+## 2. UI/UX TRANSFORMATION (MODERN LIGHT THEME)
+- **Visual Identity**: Transitioned from a "Techno-Brutalist" dark mode to a premium "Light, Curvy & Soft" aesthetic.
+- **Design Tokens**: 
+  - Implemented consistent boundary curvature (`border-radius: 24px`).
+  - Replaced rigid borders with "Floating" shadow hierarchies for better depth.
+  - Developed a soft-blue/white palette for improved readability.
+- **Interactive Elements**: Refined button styles with lift-on-hover effects and smooth transitions.
+
+---
+
+## 3. INTELLIGENT REASONING PIPELINE
+- **Intent Classification**: Added a "Decision Layer" in the Planner to distinguish between:
+  - **Chitchat**: Greetings (e.g., "hi") are handled by a friendly persona directly, bypassing expensive RAG operations.
+  - **Single Paper Research**: Queries mentioning a specific paper are routed directly to that document.
+  - **General Research**: Broad technical questions trigger the multi-paper RAG flow.
+- **Fuzzy Matching**: Enhanced detection of paper titles and IDs within user queries, making the system much more robust to partial names.
+
+---
+
+## 4. AMBIGUITY RESOLUTION & CONTEXT FOCUS
+- **Selection Wall**: Implemented an inline interactive "wall" that appears when a query is ambiguous (e.g., asking for a summary when 2+ papers are available).
+- **Context Persistence**: Developed a "Focus Mode" that locks the conversational context to a selected paper for follow-up questions, preventing repeated disambiguation.
+- **Focus Bar UI**: Added a visual indicator (chip) to show which document is currently being analyzed.
+
+---
+
+## 5. FORMATTING & RESPONSE QUALITY
+- **Markdown Rendering**: Integrated `react-markdown` to transform raw AI output into a formatted academic report.
+- **Rich Elements**: Enabled support for:
+  - **Bold Headers** for better reading structure.
+  - **Bulleted/Numbered Lists** for summarizing key findings.
+  - **Code Blocks** for technical snippets.
+- **Persona Refining**: Prevented "Academic Hallucination" on chitchat by enforcing a brief, human-like response style for non-research interactions.
+
+---
+
+### End of Report - Part 1
+*Current Build: Resembler v1.1.0-PRO-MAX*
