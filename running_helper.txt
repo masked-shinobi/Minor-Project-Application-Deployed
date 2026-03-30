@@ -1,0 +1,75 @@
+# RESEMBLER PROJECT - RUNNING INSTRUCTIONS
+
+This guide will help you set up and run both the Backend (FastAPI) and the Frontend (React/Vite).
+
+---
+
+## 1. PREREQUISITES
+
+Ensure you have the following installed:
+- **Python 3.9+**
+- **Node.js (v18+) & npm**
+- **Groq API Key** (Set in your `.env` file)
+
+---
+
+## 2. BACKEND SETUP (Python)
+
+1. **Install Dependencies**:
+   Open a terminal in the project root and run:
+   ```bash
+   pip install -r requirements.txt
+   pip install fastapi uvicorn python-multipart
+   ```
+
+2. **Configure Environment**:
+   Ensure your `.env` file has your `GROQ_API_KEY`:
+   ```plaintext
+   GROQ_API_KEY=your_key_here
+   ```
+
+3. **Inital Ingestion (Optional)**:
+   Place your research PDFs in the `data/papers/` directory, then run:
+   ```bash
+   python main.py ingest
+   ```
+
+4. **Start the API Server**:
+   ```bash
+   python app.py
+   ```
+   *The backend will now be running at http://localhost:8000*
+
+---
+
+## 3. FRONTEND SETUP (React/Vite)
+
+1. **Navigate to Frontend Directory**:
+   ```bash
+   cd frontend
+   ```
+
+2. **Install Node Dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Start the Development Server**:
+   ```bash
+   npm run dev
+   ```
+   *The frontend will now be running at http://localhost:5173 (or your local Vite port)*
+
+---
+
+## 4. USAGE
+
+1. Open your browser to the Frontend URL.
+2. If the API is online (green indicator), you can start asking questions.
+3. You can also upload new PDFs directly through the UI.
+
+---
+
+### Troubleshooting
+- **CORS Errors**: The backend is configured to allow all origins, but ensure no proxy is blocking port 8000.
+- **Missing Models**: The first time you run ingestion/queries, the system will download the embedding models (around 400MB).

@@ -154,18 +154,18 @@ function App() {
           </div>
         </div>
         <div className="panel-content">
-          <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'var(--border)', marginBottom: '2rem' }}>
-            <div style={{ background: 'var(--bg-layer-2)', padding: '1rem' }}>
+          <div className="stats-grid">
+            <div className="stats-card">
               <span className="mono-label">Papers</span>
               <h3 style={{ fontSize: '1.5rem', color: 'var(--accent)' }}>{stats.total_papers}</h3>
             </div>
-            <div style={{ background: 'var(--bg-layer-2)', padding: '1rem' }}>
+            <div className="stats-card">
               <span className="mono-label">Chunks</span>
               <h3 style={{ fontSize: '1.5rem', color: 'var(--accent)' }}>{stats.total_chunks}</h3>
             </div>
           </div>
 
-          <label className="brutalist-button" style={{ width: '100%', justifyContent: 'center', marginBottom: '1.5rem' }}>
+          <label className="soft-button" style={{ width: '100%', marginBottom: '1.5rem' }}>
             <input type="file" style={{ display: 'none' }} onChange={handleUpload} accept=".pdf" />
             {uploadStatus || "Upload Research PDF"}
           </label>
@@ -181,7 +181,7 @@ function App() {
       </div>
 
       {/* Center Panel: Reasoning Stream */}
-      <div className="panel" style={{ background: 'var(--bg-deep)' }}>
+      <div className="panel">
         <div className="panel-header">
           <div>
             <span className="mono-label">Stream / Reasoning</span>
@@ -235,8 +235,8 @@ function App() {
             disabled={isProcessing}
           />
           <button 
-            className="brutalist-button" 
-            style={{ position: 'absolute', right: '2rem', top: '2.1rem', padding: '0.4rem 1rem' }}
+            className="soft-button" 
+            style={{ position: 'absolute', right: '2.5rem', top: '2rem', padding: '0.5rem 1.2rem', fontSize: '0.8rem' }}
             onClick={startQuery}
             disabled={isProcessing}
           >
