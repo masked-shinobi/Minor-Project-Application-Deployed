@@ -1,0 +1,62 @@
+[
+    {
+        "query": "What is the main objective of this research paper?",
+        "ground_truth": "The paper provides an overview of how artificial intelligence, particularly natural language processing (NLP), can be used to detect suicide risk and support mental health care by analyzing textual signals from digital communication platforms.",
+        "relevant_sections": ["Abstract", "Detection  \nAbstract"],
+        "relevant_keywords": ["artificial intelligence", "NLP", "suicide", "mental health", "detection"]
+    },
+    {
+        "query": "What NLP tasks are used in mental health detection?",
+        "ground_truth": "Key NLP tasks used in mental health detection include sentiment analysis, emotion classification, topic modeling, text classification, and named entity recognition.",
+        "relevant_sections": ["2. Natural Language Processing in Mental Health Analysis"],
+        "relevant_keywords": ["sentiment analysis", "emotion classification", "topic modeling", "text classification", "named entity recognition"]
+    },
+    {
+        "query": "What machine learning techniques are used for suicide risk detection?",
+        "ground_truth": "Traditional machine learning approaches used feature engineering techniques such as Bag-of-Words, TF-IDF features, and Linguistic Inquiry and Word Count (LIWC). Deep learning approaches using RNNs, LSTMs, CNNs for text, and Transformer-based models like BERT have significantly improved text classification performance.",
+        "relevant_sections": ["2. Natural Language Processing in Mental Health Analysis", "Common deep learning architectures include:"],
+        "relevant_keywords": ["bag-of-words", "TF-IDF", "LIWC", "RNN", "LSTM", "CNN", "BERT", "deep learning"]
+    },
+    {
+        "query": "What data sources are used in suicide risk detection research?",
+        "ground_truth": "Researchers often analyze posts from social media platforms such as Reddit mental health communities, Twitter posts, and online support forums. Crisis Text Line conversations also provide real-world examples of distress signals and crisis language.",
+        "relevant_sections": ["Common deep learning architectures include:"],
+        "relevant_keywords": ["Reddit", "Twitter", "social media", "support forums", "Crisis Text Line"]
+    },
+    {
+        "query": "What are the main challenges in suicide risk detection using AI?",
+        "ground_truth": "Key challenges include data privacy concerns since mental health data is highly sensitive, model bias due to unrepresentative training datasets, false positives and false negatives in predictions, and difficulties with sarcasm, metaphor, and cultural differences in language interpretation.",
+        "relevant_sections": ["Common deep learning architectures include:"],
+        "relevant_keywords": ["data privacy", "model bias", "false positives", "false negatives", "sarcasm", "cultural"]
+    },
+    {
+        "query": "How can AI-powered chatbots support mental health services?",
+        "ground_truth": "AI-powered chatbots can provide emotional support conversations, mental health screening, suicide risk assessment, and referral to crisis resources. When integrated with machine learning models, chatbots can automatically detect high-risk messages and trigger emergency responses.",
+        "relevant_sections": ["Common deep learning architectures include:"],
+        "relevant_keywords": ["chatbot", "emotional support", "screening", "risk assessment", "crisis resources"]
+    },
+    {
+        "query": "What ethical principles should AI mental health systems follow?",
+        "ground_truth": "Key ethical principles include transparency in AI decision-making, protection of user privacy, human oversight for critical decisions, and responsible handling of crisis situations. AI systems should assist mental health professionals rather than replace them.",
+        "relevant_sections": ["Common deep learning architectures include:"],
+        "relevant_keywords": ["transparency", "privacy", "human oversight", "ethical", "responsible"]
+    },
+    {
+        "query": "What future research directions are suggested for AI in mental health?",
+        "ground_truth": "Future research may explore multimodal analysis combining text, voice, and behavioral signals, improved contextual understanding of emotional language, real-time crisis detection systems, and personalized mental health support systems.",
+        "relevant_sections": ["Common deep learning architectures include:"],
+        "relevant_keywords": ["multimodal", "real-time", "personalized", "crisis detection", "behavioral signals"]
+    },
+    {
+        "query": "Why is early detection of suicidal ideation important?",
+        "ground_truth": "Suicide is a major global public health issue with hundreds of thousands dying each year. Early identification of suicidal ideation can significantly improve intervention outcomes. AI-powered systems can detect early warning signs and provide decision support to mental health professionals.",
+        "relevant_sections": ["1. Introduction"],
+        "relevant_keywords": ["early detection", "suicidal ideation", "intervention", "public health", "prevention"]
+    },
+    {
+        "query": "What is the conclusion of this paper on AI for mental health?",
+        "ground_truth": "AI and NLP offer promising tools for detecting suicide risk and supporting mental health care by analyzing textual signals from digital communication platforms to identify early warning signs. However, these technologies must be implemented properly with ethical considerations. When implemented properly, AI can play a valuable role in improving mental health support and suicide prevention efforts.",
+        "relevant_sections": ["9. Conclusion"],
+        "relevant_keywords": ["promising", "textual signals", "ethical", "prevention", "mental health support"]
+    }
+]

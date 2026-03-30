@@ -1,0 +1,155 @@
+/* App.css - Resetting to use index.css layout */
+
+.chat-input-container {
+  padding: 1.5rem;
+  background: var(--bg-layer-1);
+  border-top: 1px solid var(--border);
+  position: relative;
+}
+
+.chat-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  background: var(--bg-layer-2);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  transition: var(--transition-fast);
+}
+
+.chat-input:focus {
+  border-color: var(--accent);
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.message {
+  padding: 1.5rem;
+  border-left: 2px solid var(--border);
+  transition: var(--transition-slow);
+}
+
+.message.user {
+  border-color: var(--accent);
+  background: rgba(255, 69, 0, 0.05);
+}
+
+.message.ai {
+  border-left: 3px solid var(--success);
+  background: rgba(0, 255, 65, 0.03);
+  backdrop-filter: blur(4px);
+}
+
+.message.ai-final {
+  border: 1px solid var(--success);
+  border-left: 5px solid var(--success);
+  background: rgba(0, 255, 65, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 255, 65, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.message.ai-final::after {
+  content: "RESEARCH VERDICT";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--success);
+  color: var(--bg-deep);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border);
+}
+
+.pulse {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulse-ring 1.5s infinite;
+}
+
+.pulse.inactive {
+  background: #444;
+  box-shadow: none;
+  animation: none;
+}
+
+.pulse.offline {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulse-ring-err 1.5s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(0, 255, 65, 0); }
+  100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 255, 65, 0); }
+}
+
+@keyframes pulse-ring-err {
+  0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 69, 0, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(255, 69, 0, 0); }
+  100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 69, 0, 0); }
+}
+
+.paper-card {
+  padding: 1rem;
+  background: var(--bg-layer-2);
+  border: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.paper-card:hover {
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+.log-entry {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+  border-left: 1px solid var(--border);
+  padding-left: 0.75rem;
+}
+
+.log-entry.active {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.log-entry.done {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.citation-chunk {
+  font-size: 0.85rem;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  padding: 1rem;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
