@@ -22,22 +22,39 @@ class ExplanationAgent:
     def run(self, summary_output: dict, query: str = "") -> dict:
         """
         Generate the final explanation.
-
-        Args:
-            summary_output: Output dict from SummaryAgent.run().
-            query: The original user query.
-
-        Returns:
-            Dict with keys:
-              - "query": original query
-              - "answer": the final answer text
-              - "sources_used": number of sources referenced
-              - "confidence": self-assessed confidence level
         """
         summary = summary_output.get("summary", "")
         original_context = summary_output.get("original_context", "")
         source_count = summary_output.get("source_count", 0)
+        is_chitchat = summary_output.get("is_chitchat", False)
 
+        # Handle simple greetings/chitchat with a friendly persona
+        if is_chitchat:
+            system_prompt = (
+                "You are Resembler, a friendly and helpful academic AI assistant. "
+                "The user is engaging in casual conversation or greeting. "
+                "Respond naturally, briefly, and helpfully without using an academic tone "
+                "or citations. Keep it under 2 sentences."
+            )
+            prompt = f"User says: {query}"
+            
+            try:
+                answer = self.llm_client.generate(
+                    prompt=prompt,
+                    system_prompt=system_prompt,
+                    max_tokens=100,
+                    temperature=0.7
+                )
+                return {
+                    "query": query,
+                    "answer": answer,
+                    "sources_used": 0,
+                    "confidence": "high"
+                }
+            except Exception as e:
+                return {"query": query, "answer": "Hello! How can I help you today?", "sources_used": 0, "confidence": "high"}
+
+        # Handle cases with no context
         if not summary.strip() or summary.startswith("No relevant context"):
             return {
                 "query": query,
@@ -50,6 +67,7 @@ class ExplanationAgent:
                 "confidence": "low"
             }
 
+        # Standard Academic Persona
         system_prompt = (
             "You are an expert academic research analyst. Your task is to provide "
             "a clear, well-structured, and comprehensive answer to the user's question "

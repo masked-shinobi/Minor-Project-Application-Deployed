@@ -100,28 +100,77 @@ async def query_endpoint(data: Dict[str, str]):
 @app.websocket("/ws/reasoning")
 async def websocket_reasoning(websocket: WebSocket):
     await websocket.accept()
+    # Session state for context persistence
+    active_paper_id = None
+    
     try:
         while True:
             data = await websocket.receive_json()
             query = data.get("query")
+            # Allow client to override or clear the active context
+            if "active_paper_id" in data:
+                active_paper_id = data["active_paper_id"]
+
             if not query:
                 await websocket.send_json({"error": "No query"})
                 continue
+
+            # Fetch available papers for ambiguity detection
+            db = MetadataDB()
+            available_papers = db.list_papers()
 
             # Modified routing logic with progress updates
             pipeline = get_query_pipeline()
             router = pipeline["router"]
             
-            # Step 1: Planning
+            # Step 1: Planning (now aware of available papers and active context)
             await websocket.send_json({"step": "planning", "status": "started"})
             t0 = time.time()
-            plan = router.planner.plan(query)
+            
+            # Use active_paper_id if set, otherwise let the planner detect it
+            current_query_papers = available_papers
+            plan = router.planner.plan(query, current_query_papers)
+            
+            # If we have an active session context, force it into the plan
+            if active_paper_id:
+                plan["paper_filter"] = active_paper_id
+                if plan["query_type"] == "ambiguous":
+                    plan["query_type"] = "summary" # Reset to summary if we have a filter
+                    plan["is_ambiguous"] = False
+
             await websocket.send_json({
                 "step": "planning", 
                 "status": "completed", 
                 "data": plan,
                 "duration": round(time.time() - t0, 3)
             })
+
+            # Handle Chitchat / Direct Response
+            if plan["query_type"] == "chitchat":
+                # feed simplified flow
+                chitchat_content = {
+                    "summary": "Greeting or general talk.",
+                    "original_context": "",
+                    "source_count": 0,
+                    "is_chitchat": True
+                }
+                explanation_output = router.explanation_agent.run(chitchat_content, query=query)
+                await websocket.send_json({
+                    "step": "final_answer", 
+                    "answer": explanation_output["answer"], 
+                    "confidence": "high",
+                    "retrieved_chunks": []
+                })
+                continue
+
+            # Handle Ambiguity
+            if plan.get("is_ambiguous"):
+                await websocket.send_json({
+                    "step": "clarification_needed",
+                    "papers": available_papers,
+                    "query": query
+                })
+                continue
 
             # Step 2: Retrieval
             await websocket.send_json({"step": "retrieval", "status": "started"})
@@ -198,7 +247,8 @@ async def websocket_reasoning(websocket: WebSocket):
                 "step": "final_answer", 
                 "answer": final_answer, 
                 "confidence": confidence,
-                "retrieved_chunks": [asdict(r) for r in retrieval_output.get("results", [])]
+                "retrieved_chunks": [asdict(r) for r in retrieval_output.get("results", [])],
+                "active_paper_id": plan.get("paper_filter") # Feedback current filter
             })
 
     except WebSocketDisconnect:

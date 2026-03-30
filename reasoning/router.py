@@ -41,34 +41,45 @@ class Router:
     def route(self, query: str, available_papers: list = None) -> Dict[str, Any]:
         """
         Route a query through the full multi-agent pipeline.
-
-        Args:
-            query: The user's question.
-            available_papers: Optional list of available papers.
-
-        Returns:
-            Dict containing the full pipeline output:
-              - "query": original query
-              - "plan": the execution plan
-              - "retrieval": retrieval agent output
-              - "summary": summary agent output (if applicable)
-              - "explanation": explanation agent output
-              - "verification": verification agent output (if applicable)
-              - "answer": the final answer text
-              - "timing": execution time for each step (in seconds)
         """
         timing = {}
         output = {"query": query}
 
-        # Step 1: Planning
+        # Step 1: Planning (now with available_papers awareness)
         t0 = time.time()
         plan = self.planner.plan(query, available_papers)
         timing["planning"] = round(time.time() - t0, 3)
         output["plan"] = plan
 
         print(f"[Router] Query type: {plan['query_type']}")
-        print(f"[Router] Strategy: {plan['strategy_notes']}")
+        
+        # --- Handle Chitchat (Bypass RAG) ---
+        if plan["query_type"] == "chitchat":
+            t0 = time.time()
+            # Feed a special chitchat "summary" to the explanation agent
+            chitchat_content = {
+                "summary": "This is a general conversation or greeting. No research context needed.",
+                "original_context": "",
+                "source_count": 0,
+                "is_chitchat": True
+            }
+            explanation_output = self.explanation_agent.run(chitchat_content, query=query)
+            timing["explanation"] = round(time.time() - t0, 3)
+            
+            output["answer"] = explanation_output["answer"]
+            output["confidence"] = "high"
+            output["timing"] = timing
+            return output
 
+        # --- Handle Ambiguity (Stop and ask user) ---
+        if plan.get("is_ambiguous"):
+            output["needs_clarification"] = True
+            output["available_papers"] = available_papers
+            output["answer"] = "I found multiple papers. Which one should I analyze?"
+            output["timing"] = timing
+            return output
+
+        # --- Standard RAG Flow ---
         # Step 2: Retrieval
         t0 = time.time()
         retrieval_output = self.retrieval_agent.run(
@@ -89,16 +100,10 @@ class Router:
             timing["summarization"] = round(time.time() - t0, 3)
             output["summary"] = summary_output
         else:
-            # Skip summarization — pass retrieval context directly
             output["summary"] = {
                 "query": query,
                 "summary": retrieval_output.get("context", ""),
-                "structured": {
-                    "key_claims": [],
-                    "methodologies": [],
-                    "limitations": [],
-                    "source_citations": [],
-                },
+                "structured": {"key_claims": [], "methodologies": [], "limitations": [], "source_citations": []},
                 "source_count": retrieval_output.get("num_results", 0),
                 "original_context": retrieval_output.get("context", "")
             }
@@ -123,30 +128,17 @@ class Router:
             timing["verification"] = round(time.time() - t0, 3)
             output["verification"] = verification_output
 
-            # Use corrected answer if verification failed
             if not verification_output["verified"] and verification_output.get("corrected_answer"):
                 output["answer"] = verification_output["corrected_answer"]
                 output["confidence"] = verification_output.get("confidence", "low")
-                print(f"[Router] ⚠ Verification failed — using corrected answer. "
-                      f"Issues: {verification_output['issues']}")
             else:
                 output["answer"] = explanation_output["answer"]
                 output["confidence"] = verification_output.get(
                     "confidence", explanation_output.get("confidence", "unknown")
                 )
-                if verification_output["verified"]:
-                    print("[Router] ✓ Answer verified as faithful.")
-                else:
-                    print("[Router] ⚠ Verification failed but no correction available.")
         else:
-            # No verification agent — use explanation directly
             output["answer"] = explanation_output["answer"]
             output["confidence"] = explanation_output.get("confidence", "unknown")
 
         output["timing"] = timing
-
-        total_time = sum(timing.values())
-        print(f"[Router] Total time: {total_time:.2f}s | "
-              f"Confidence: {output['confidence']}")
-
         return output
